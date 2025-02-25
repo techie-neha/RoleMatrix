@@ -1,29 +1,26 @@
-// src/pages/Auth/Login.js
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Form, Button, Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
+import { useAuth } from '../../context/authContext';
 import axios from 'axios';
 
 const Login = () => {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
-
+    const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Check if there's a message from redirect (like after signup)
+   
     useEffect(() => {
         if (location.state?.message) {
             setSuccess(location.state.message);
         }
 
-        // Check if user is already logged in
+    
         const token = localStorage.getItem('token');
         if (token) {
             navigate('/dashboard');
@@ -43,13 +40,15 @@ const Login = () => {
 
         try {
             const response = await axios.post('http://localhost:3001/api/v0/auth/login', formData);
-            console.log(JSON.stringify(response.data.user))
-            // Save token and user data
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
 
-            // Redirect to dashboard
-            navigate('/dashboard');
+            if (response.data.success) {
+                login(response.data.user, response.data.token);
+                if (response.data.user.role === 'admin') {
+                    navigate('/admin-dashboard');
+                } else {
+                    navigate('/dashboard');
+                }
+            }
         } catch (err) {
             setError(err.response?.data?.message || 'Invalid email or password');
         } finally {
