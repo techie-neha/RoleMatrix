@@ -1,43 +1,66 @@
-import { useState,useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import axios from "axios"
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import Login from './pages/Auth/Login';
+import Signup from './pages/Auth/Signup';
+import AdminDashboard from './pages/Auth/Admin/AdminDashboard';
+import UserDashboard from './pages/User/UserDashboard';
 
 function App() {
-  const [count, setCount] = useState(0)
-const fetchAPI =async()=>{
-  const res = await axios.get("http://localhost:3000/api");
-  console.log(res.data)
-}
+  const [userRole, setUserRole] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-useEffect(()=>{
-  fetchAPI()
-},[])
+  const getUserRole=()=>{
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        console.log(user.role)
+        setUserRole(user.role);
+      } catch (error) {
+        console.log("Error parsing user data:", error);
+      }
+    }
+    setLoading(false);
+  }
+
+  useEffect(()=>{getUserRole();},[])
+  // Check user role from localStorage
+  // useEffect(() => {
+  //   const userData = localStorage.getItem('user');
+  //   if (userData) {
+  //     try {
+  //       const user = JSON.parse(userData);
+  //       console.log(user.role)
+  //       setUserRole(user.role);
+  //     } catch (error) {
+  //       console.log("Error parsing user data:", error);
+  //     }
+  //   }
+  //   setLoading(false);
+  // }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Role-based routing */}
+        
+        { userRole === 'admin' ? (
+          <Route path="/" element={<AdminDashboard />} />
+        ) : (
+          <Route path="/" element={<UserDashboard />} />
+        )}
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

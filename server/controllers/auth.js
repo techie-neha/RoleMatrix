@@ -4,6 +4,36 @@ const User = require('../models/User');
 const { use } = require('../routes/authRoutes');
 
 require("dotenv").config();
+
+
+// Admin to this app is only one and unique , hence adding the admin ,manually into DB so admin only need to login (no new admin can be created)
+
+
+exports.createAdmin = async()=>{
+    try{
+        const adminExist = await User.findOne({role:'admin'})
+if(adminExist){
+    console.log("admin aldready in Db");
+    return;
+};
+
+const  hashedPassword = await bcrypt.hash("uniqueAdmin2025",10);
+
+const adminUser = new User({
+    firstname:"Neha",
+    lastname:"Kanki",
+    email:"kankineha@gmail.com",
+    password:hashedPassword,
+    role:'admin'
+});
+
+await adminUser.save();
+console.log("Admin created Successfully")
+    }catch(error){
+console.error("Error while admin creation", error)
+    }
+}
+
 exports.signup = async(req, res) => {
     try {
         const { firstname, lastname, email, password, role } = req.body;
