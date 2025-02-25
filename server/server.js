@@ -7,6 +7,10 @@ const userRoutes = require('./routes/authRoutes')
     //     origin: [" http://localhost:5174/"]
     // }
 
+ const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+
 app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -35,6 +35,8 @@ exports.signup = async(req, res) => {
 exports.login = async(req, res) => {
     try {
         const { email, password } = req.body;
+
+        // for empty feilds
         if (!email || !password) {
             console.log("error in password matching");
             return res.status(400).json({
@@ -42,6 +44,8 @@ exports.login = async(req, res) => {
                 message: `Please Fill up All the Required Fields`,
             })
         }
+
+        // if User doesn't exist
         const user = await User.findOne({ email });
         if (!user) {
             console.log("user not found")
@@ -49,17 +53,26 @@ exports.login = async(req, res) => {
 
         }
 
-
+        //login password === user(Signup)password
 
         const passwordValidation = await bcrypt.compare(password, user.password);
         if (!passwordValidation) {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
-
+        //set JWt token
         const token = jwt.sign({ userId: user._id, email: user.email, role: user.role },
             process.env.JWT_SECRET, { expiresIn: '30d' }
         );
+
+
+        //passing token in cookie
+        res.cookie('token', token, {
+            httpOnly: true,         
+           
+            maxAge:  1000*30 * 24 * 60 * 60  // 30 days
+        });
+
 
         res.status(200).json({
             success: true,
