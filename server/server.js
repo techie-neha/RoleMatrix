@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
 require("dotenv").config();
-const userRoutes = require('./routes/authRoutes')
+const authRoutes = require('./routes/authRoutes')
+const  userRoutes = require('./routes/userRoute')
 const {createAdmin} = require('./controllers/auth')
 const cors = require('cors');
 
@@ -24,7 +25,8 @@ const db = require("./config/db");
 db.connect()
 createAdmin();
 // Routes
-app.use("/api/v0/auth", userRoutes)
+app.use("/api/v0/auth", authRoutes);
+app.use("/api/v0",userRoutes)
 
 
 
