@@ -50,14 +50,6 @@ function Navbar({ onSelect, onLogout }) {
 
 
 
-// function ManageUser() {
-//   return <div className="p-4">Manage User Page</div>;
-// }
-
-// function ManageTeam() {
-//   return <div className="p-4">Manage Team Page</div>;
-// }
-
 const AdminDashboard = () => {
   const [user, setUser] = useState(null);
   const [activePage, setActivePage] = useState('manageUser');
