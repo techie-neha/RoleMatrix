@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col, Table, Alert, Spinner } from 'react-bootstrap';
 import axios from 'axios';
-import { FaTrash } from 'react-icons/fa';
-
+import { FaTrash,FaEdit } from 'react-icons/fa';
+import { useAuth } from '../../context/authContext';
 const ManageContact = () => {
+    const { user } = useAuth();
     const [contacts, setContacts] = useState([]);
     const [formData, setFormData] = useState({ name: '', phoneNo: '', email: '', designation: '' });
     const [error, setError] = useState('');
@@ -12,6 +13,7 @@ const ManageContact = () => {
 
     // Fetch all contacts
     const fetchContacts = async () => {
+        setError('')
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get('http://localhost:3001/api/v0/contact/getAllContacts', {
@@ -43,6 +45,8 @@ const ManageContact = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        setError(''),
+        setSuccess('')
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -121,7 +125,7 @@ const ManageContact = () => {
     type="tel"
     name="phoneNo"
     value={formData.phoneNo}
-    onChange={(e) => setFormData({ ...formData, phoneNo: e.target.value })}
+    onChange={handleChange}
     placeholder="Phone Number"
     pattern="^\d{10}$"
     required
@@ -163,6 +167,7 @@ const ManageContact = () => {
                         <th>Phone Number</th>
                         <th>Email</th>
                         <th>Designation</th>
+                        <th>Edit</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -181,7 +186,10 @@ const ManageContact = () => {
                 <td>{contact.phoneNo}</td>
                 <td>{contact.email}</td>
                 <td>{contact.designation}</td>
-                <td className='text-center'> 
+                <td>                <FaEdit style={{ color: 'blue', cursor: 'pointer', marginRight: '10px' }} onClick={() => handleEdit(contact)} />
+                </td>
+                <td> 
+
                     <FaTrash 
                         style={{ color: 'red', cursor: 'pointer' }} 
                         onClick={() => handleDelete(contact._id)} 
