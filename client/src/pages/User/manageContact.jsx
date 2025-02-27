@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col, Table, Alert, Spinner } from 'react-bootstrap';
 import axios from 'axios';
-import { FaTrash,FaEdit } from 'react-icons/fa';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 import { useAuth } from '../../context/authContext';
 const ManageContact = () => {
     const { user } = useAuth();
@@ -10,7 +10,9 @@ const ManageContact = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-const [editingId, setEditingId] = useState(null);
+    const [editingId, setEditingId] = useState(null);
+
+
     // Fetch all contacts
     const fetchContacts = async () => {
         setError('')
@@ -26,6 +28,11 @@ const [editingId, setEditingId] = useState(null);
             setError('Error fetching contacts');
         }
     };
+    useEffect(() => {
+        fetchContacts();
+    }, []);
+
+    // for alert timeout
 
     useEffect(() => {
         if (success || error) {
@@ -39,14 +46,11 @@ const [editingId, setEditingId] = useState(null);
     }, [success, error]);
 
 
-    useEffect(() => {
-        fetchContacts();
-    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setError(''),
-        setSuccess('')
+            setSuccess('')
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -58,13 +62,13 @@ const [editingId, setEditingId] = useState(null);
 
         try {
             const token = localStorage.getItem('token');
-            if(editingId){
+            if (editingId) {
                 //update the contact
                 await axios.put(`http://localhost:3001/api/v0/contact/updateContact/${editingId}`, formData, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setSuccess('Contact updated successfully');
-            }else {
+            } else {
                 // Create contact
                 await axios.post('http://localhost:3001/api/v0/contact/createContact', formData, {
                     headers: { Authorization: `Bearer ${token}` },
@@ -72,10 +76,10 @@ const [editingId, setEditingId] = useState(null);
                 setSuccess('Contact created successfully');
             }
 
-            setFormData({name:"",phoneNo:"",email:"",designation:''});
+            setFormData({ name: "", phoneNo: "", email: "", designation: '' });
             setEditingId(null);
             fetchContacts()
-           
+
         } catch (err) {
             setError(err.response?.data?.message || 'Error creating contact');
         } finally {
@@ -85,7 +89,7 @@ const [editingId, setEditingId] = useState(null);
 
     const handleDelete = async (contactId) => {
         try {
-           
+
             const token = localStorage.getItem('token');
             const response = await axios.delete(
                 `http://localhost:3001/api/v0/contact/deleteContact/${contactId}`,
@@ -95,7 +99,7 @@ const [editingId, setEditingId] = useState(null);
                     },
                 }
             );
-    
+
             if (response.data.success) {
                 //remove from state also
                 setContacts((prevContacts) => prevContacts.filter((contact) => contact._id !== contactId));
@@ -108,10 +112,10 @@ const [editingId, setEditingId] = useState(null);
             console.error(error);
         }
     };
-const handleEdit=(contact)=>{
-    setFormData(contact);
-    setEditingId(contact._id)
-}
+    const handleEdit = (contact) => {
+        setFormData(contact);
+        setEditingId(contact._id)
+    }
 
     return (
         <Container className="mt-5">
@@ -133,15 +137,15 @@ const handleEdit=(contact)=>{
                         />
                     </Col>
                     <Col md={3}>
-                    <Form.Control
-    type="tel"
-    name="phoneNo"
-    value={formData.phoneNo}
-    onChange={handleChange}
-    placeholder="Phone Number"
-    pattern="^\d{10}$"
-    required
-/>
+                        <Form.Control
+                            type="tel"
+                            name="phoneNo"
+                            value={formData.phoneNo}
+                            onChange={handleChange}
+                            placeholder="Phone Number"
+                            pattern="^\d{10}$"
+                            required
+                        />
 
                     </Col>
                     <Col md={3}>
@@ -184,33 +188,34 @@ const handleEdit=(contact)=>{
                     </tr>
                 </thead>
                 <tbody className='text-center'>
-    {contacts.length === 0 ? (
-        <tr>
-            <td colSpan="6" className="text-center text-danger">
-                No contacts found
-            </td>
-        </tr>
-    ) : (
-        contacts.map((contact, index) => (
-            <tr key={contact._id}>
-                <td>{index + 1}</td> {/* Count column */}
-                <td>{contact.name}</td>
-                <td>{contact.phoneNo}</td>
-                <td>{contact.email}</td>
-                <td>{contact.designation}</td>
-                <td>                <FaEdit style={{ color: 'blue', cursor: 'pointer', marginRight: '10px' }} onClick={() => handleEdit(contact)} />
-                </td>
-                <td> 
+                    {contacts.length === 0 ? (
+                        <tr>
+                            <td colSpan="6" className="text-center text-danger">
+                                No contacts found
+                            </td>
+                        </tr>
+                    ) : (
+                        contacts.map((contact, index) => (
+                            <tr key={contact._id}>
+                                <td>{index + 1}</td> {/* Count column */}
+                                <td>{contact.name}</td>
+                                <td>{contact.phoneNo}</td>
+                                <td>{contact.email}</td>
+                                <td>{contact.designation}</td>
+                                <td>               
+                                     <FaEdit style={{ color: 'blue', cursor: 'pointer', marginRight: '10px' }} onClick={() => handleEdit(contact)} />
+                                </td>
+                                <td>
 
-                    <FaTrash 
-                        style={{ color: 'red', cursor: 'pointer' }} 
-                        onClick={() => handleDelete(contact._id)} 
-                    />
-                </td>
-            </tr>
-        ))
-    )}
-</tbody>
+                                    <FaTrash
+                                        style={{ color: 'red', cursor: 'pointer' }}
+                                        onClick={() => handleDelete(contact._id)}
+                                    />
+                                </td>
+                            </tr>
+                        ))
+                    )}
+                </tbody>
 
             </Table>
         </Container>
