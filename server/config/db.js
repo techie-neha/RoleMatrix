@@ -6,8 +6,8 @@ exports.connect = () => {
 
 
     mongoose.connect(dbURI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+            // useNewUrlParser: true,
+            // useUnifiedTopology: true,
 
         })
         .then(() => console.log("DB Connected Successfully"))
