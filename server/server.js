@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes')
 const  userRoutes = require('./routes/userRoute')
 const {createAdmin} = require('./controllers/auth')
 const teamRoutes =require('./routes/teamRoutes')
+const contactRoutes = require('./routes/contactRoutes')
 const cors = require('cors');
 
     const corsOptions = {
@@ -29,7 +30,7 @@ createAdmin();
 app.use("/api/v0/auth", authRoutes);
 app.use("/api/v0",userRoutes)
 app.use("/api/v0/team",teamRoutes)
-
+app.use("/api/v0/contact",contactRoutes)
 
 
 app.get("/api", (req, res) => {
