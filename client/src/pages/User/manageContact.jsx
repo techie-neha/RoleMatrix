@@ -10,7 +10,7 @@ const ManageContact = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
+const [editingId, setEditingId] = useState(null);
     // Fetch all contacts
     const fetchContacts = async () => {
         setError('')
@@ -58,15 +58,24 @@ const ManageContact = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('http://localhost:3001/api/v0/contact/createContact', formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setSuccess('Contact created successfully');
+            if(editingId){
+                //update the contact
+                await axios.put(`http://localhost:3001/api/v0/contact/updateContact/${editingId}`, formData, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setSuccess('Contact updated successfully');
+            }else {
+                // Create contact
+                await axios.post('http://localhost:3001/api/v0/contact/createContact', formData, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setSuccess('Contact created successfully');
+            }
 
-            setFormData({ name: '', phoneNo: '', email: '', designation: '' });
-            fetchContacts();
+            setFormData({name:"",phoneNo:"",email:"",designation:''});
+            setEditingId(null);
+            fetchContacts()
+           
         } catch (err) {
             setError(err.response?.data?.message || 'Error creating contact');
         } finally {
@@ -99,7 +108,10 @@ const ManageContact = () => {
             console.error(error);
         }
     };
-
+const handleEdit=(contact)=>{
+    setFormData(contact);
+    setEditingId(contact._id)
+}
 
     return (
         <Container className="mt-5">
@@ -154,7 +166,7 @@ const ManageContact = () => {
                     </Col>
                 </Row>
                 <Button variant="primary" type="submit" className="w-100" disabled={isLoading}>
-                    {isLoading ? <Spinner animation="border" size="sm" /> : 'Create Contact'}
+                    {isLoading ? <Spinner animation="border" size="sm" /> : editingId ? 'Update Contact' : 'Create Contact'}
                 </Button>
             </Form>
 
