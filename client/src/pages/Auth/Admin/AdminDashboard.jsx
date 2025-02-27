@@ -1,31 +1,3 @@
-// import { useNavigate } from 'react-router-dom';
-// import { useEffect, useState } from 'react';
-
-// const AdminDashboard = () => {
-//   const [user, setUser] = useState(null);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     const userData = localStorage.getItem('user');
-//     if (userData) {
-//       setUser(JSON.parse(userData));
-//     }
-//   }, []);
-
-//   const handleLogout = () => {
-//     localStorage.removeItem('token');
-//     localStorage.removeItem('user');
-//     navigate('/login');
-//   };
-
-//   return (
-//     <div style={{ padding: '20px' }}>
-//     {/* Navbar COmpoent */}
-//     </div>
-//   );
-// };
-
-// export default AdminDashboard;
 
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -35,6 +7,8 @@ import ManageUser from './ManageUser';
 const admin = JSON.parse(localStorage.getItem('user'));
 
 function Navbar({ onSelect, onLogout }) {
+  
+
   return (
     <div className="d-flex justify-content-between border-bottom">
       <p className="h3   text-dark font-bold">Contactify</p>

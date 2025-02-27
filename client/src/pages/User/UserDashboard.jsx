@@ -4,7 +4,7 @@ import { Button } from "../../components/button";
 import  ManageContact from './manageContact';
 import { useAuth } from '../../context/authContext';
 const user = JSON.parse(localStorage.getItem('user'));
-console.log(user)
+
 
 function Navbar({ onSelect, onLogout }) {
   const { user } = useAuth();

@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+import { useAuth } from '../../../context/authContext';
+
+const user = JSON.parse(localStorage.getItem('user'));
 function ManageUser() {
+  const { user } = useAuth();
   const [users, setUsers] = useState([]);
   useEffect(() => {
     axios.get('http://localhost:3001/api/v0/allusers', {
