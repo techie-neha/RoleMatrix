@@ -27,3 +27,11 @@ For Login ---> emailD : kankineha@gmail.com   password : uniqueAdmin2025
 
 Firstly register on signup Page and Login
 
+
+# Authentication and Authorization
+
+for authorization middleware is used through which Admin and Standard Dashboard are displayed
+
+# Standard User Dashboard
+
+The User can be part of team and can manage the contacts can perform all the CRUD operations
