@@ -37,6 +37,13 @@ console.error("Error while admin creation", error)
 exports.signup = async(req, res) => {
     try {
         const { firstname, lastname, email, password, role } = req.body;
+        if (!email || !password || !firstname || !lastname) {
+           
+            return res.status(400).json({
+                success: false,
+                message: `Please Fill up All the Required Fields`,
+            })
+        }
 
         const userExist = await User.findOne({ email });
         if (userExist) return res.status(400).json({ message: 'User already exists in DB' });

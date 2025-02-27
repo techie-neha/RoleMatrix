@@ -1,6 +1,9 @@
 const { request } = require('express');
 const User = require('../models/User');
-const Team= require('../models/Team')
+const Team= require('../models/Team');
+const Contact = require('../models/Contact')
+
+
 
 exports.getAllUsers = async(req , res )=>{
     try{
@@ -32,12 +35,16 @@ exports.deleteUser = async(req,res)=>{
 
             {members:userId},
             {$pull:{members:userId}}
+
+
         )
+//  delete all the contact created by that user also 
+        await Contact.deleteMany({createdBy:userId})      
 
         await User.findByIdAndDelete(userId);
 
         
-res.status(200).json({success:true,message:"User deleted Successfully from team and User model"})
+res.status(200).json({success:true,message:"User deleted Successfully from team ,Contact and User model"})
 
     }catch(error){
         res.status(500).json({success:false,message:"Error while deleting user in server"})

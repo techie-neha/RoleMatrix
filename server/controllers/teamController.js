@@ -49,6 +49,22 @@ res.status(500).json({success:false,message:"Error in Team Creation by server", 
 }
 
 
+exports.getAllTeams = async(req,res)=>{
+    try{
+        const adminId = req.user.userId;
+        const teams = await Team.find({createdBy:adminId}).populate("members","name email")
+
+        res.status(200).json({success:true, message:"Team fetched Successfully", teams})
+    }
+
+    catch(error){
+        res.status(500).json({success:false,message:"error in fetching teams" , error:error.message
+
+        })
+    }
+}
+
+
 exports.deleteTeam = async(req , res)=>{
     try{
         const {teamId} = req.params;
