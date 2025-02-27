@@ -39,7 +39,7 @@ exports.createTeam =async(req , res)=>{
         );
 
 
-        res.status(200).json({success:true,message:"Team Successfully Created",team:newTeam});
+        res.status(200).json({success:true,message:"Team Created",team:newTeam});
 
 
 
@@ -54,7 +54,7 @@ exports.getAllTeams = async(req,res)=>{
         const adminId = req.user.userId;
         const teams = await Team.find({createdBy:adminId}).populate("members","name email")
 
-        res.status(200).json({success:true, message:"Team fetched Successfully", teams})
+        res.status(200).json({success:true, message:"team fetched Successfully", teams})
     }
 
     catch(error){
@@ -82,7 +82,7 @@ exports.deleteTeam = async(req , res)=>{
         res.status(200).json({success:true,message:"Team deleted"})
 
     }catch(error){
-        res.status(500).json({success:false,message:"Error while deletion by server",error:error.message})
+        res.status(500).json({success:false,message:"Error in deletion by server",error:error.message})
 
     }
 
