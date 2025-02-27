@@ -16,6 +16,9 @@ To start : npm run dev
 
 To start : npm run dev
 
+# Database
+
+MongoDB and Mongoose ORM
 
 # For Admin Access
 
