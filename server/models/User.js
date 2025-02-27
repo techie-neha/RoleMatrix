@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
         required: true 
     },
     teams: [{ type: mongoose.Schema.Types.ObjectId, ref: "Team" }],
+    contacts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Contact" }], 
 
 })
 
