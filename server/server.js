@@ -4,6 +4,7 @@ require("dotenv").config();
 const authRoutes = require('./routes/authRoutes')
 const  userRoutes = require('./routes/userRoute')
 const {createAdmin} = require('./controllers/auth')
+const teamRoutes =require('./routes/teamRoutes')
 const cors = require('cors');
 
     const corsOptions = {
@@ -27,6 +28,7 @@ createAdmin();
 // Routes
 app.use("/api/v0/auth", authRoutes);
 app.use("/api/v0",userRoutes)
+app.use("/api/v0/team",teamRoutes)
 
 
 

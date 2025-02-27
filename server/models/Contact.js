@@ -6,7 +6,7 @@ const contactSchema = new mongoose.Schema({
     email: { type: String },
     designation: { type: String },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    teamId: { type: mongoose.Schema.Types.ObjectId, ref: "Team" }, // Linked to team
+    
 }, { timestamps: true });
 
 module.exports = mongoose.model("Contact", contactSchema);
